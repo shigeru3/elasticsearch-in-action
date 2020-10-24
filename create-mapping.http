@@ -71,7 +71,6 @@ content-type: application/json
       "members" : { "type" : "text" },
       "location_group" : { "type" : "text" },
       "event" : {
-        "type": "nested",
         "properties": {
           "host" : { "type" : "text" },
           "title" : { "type" : "text" },

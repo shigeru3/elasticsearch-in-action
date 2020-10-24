@@ -48,3 +48,62 @@ Content-Type: application/json
     }
   }
 }
+
+###
+GET {{host}}:{{port}}/get-together/_search?from=1&size=10&sort=created_on:asc&_source=name,created_on&q=name:elasticsearch
+
+###
+GET {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+	"query": {
+      "match_all": {}
+    },
+  "from": 1,
+  "size": 10
+}
+
+###
+GET {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+	"query": {
+		"match_all": {}
+	},
+	"_source": ["name", "created_on", "event.*"]
+}
+
+###
+GET {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+	"query": {
+		"match_all": {}
+	},
+"_source": ["name", "organizer", "description"],
+	"sort": [
+      {"created_on": "asc"}
+      ]
+}
+
+###
+GET {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+	"query": {
+		"bool": {
+          "must": [
+            {"match": {"event.title": "Hadoop"}}
+          ],
+          "filter": {
+            "term": {
+              "event.host": "andy"
+            }
+          }
+        }
+	}
+}
