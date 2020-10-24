@@ -1,0 +1,50 @@
+###
+GET http://localhost:9200
+Accept: application/json
+
+###
+GET {{host}}:{{port}}/?pretty=true
+Accept: application/json
+
+###
+PUT {{host}}:{{port}}/get-together/_doc/1?pretty
+content-type: application/json
+
+{
+  "name": "Elasticsearch Denver",
+  "organizer": "Lee"
+}
+
+###
+GET http://localhost:9200/get-together/_mapping
+
+###
+GET http://localhost:9200/_cat/indices?v
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+###
+GET {{host}}:{{port}}/get-together/_search?q=name:elasticsearch
+Content-Type: application/json
+
+###
+GET {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "query_string": {
+      "query": "elasticsearch san francisco",
+      "default_field": "name",
+      "default_operator": "AND"
+    }
+  }
+}
