@@ -57,7 +57,7 @@ GET {{host}}:{{port}}/get-together/_search
 Content-Type: application/json
 
 {
-	"query": {
+  "query": {
       "match_all": {}
     },
   "from": 1,
@@ -69,10 +69,10 @@ GET {{host}}:{{port}}/get-together/_search
 Content-Type: application/json
 
 {
-	"query": {
-		"match_all": {}
-	},
-	"_source": ["name", "created_on", "event.*"]
+  "query": {
+    "match_all": {}
+  },
+  "_source": ["name", "created_on", "event.*"]
 }
 
 ###
@@ -80,11 +80,11 @@ GET {{host}}:{{port}}/get-together/_search
 Content-Type: application/json
 
 {
-	"query": {
-		"match_all": {}
-	},
+  "query": {
+    "match_all": {}
+  },
 "_source": ["name", "organizer", "description"],
-	"sort": [
+  "sort": [
       {"created_on": "asc"}
       ]
 }
@@ -94,8 +94,8 @@ GET {{host}}:{{port}}/get-together/_search
 Content-Type: application/json
 
 {
-	"query": {
-		"bool": {
+  "query": {
+    "bool": {
           "must": [
             {"match": {"event.title": "Hadoop"}}
           ],
@@ -105,5 +105,82 @@ Content-Type: application/json
             }
           }
         }
-	}
+  }
+}
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "bool": {
+      "filter": {
+        "term": {"name": "elasticsearch"}
+      }
+    }
+  }
+}
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "query_string": {
+      "query": "nosql"
+    }
+  }
+}
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "query_string": {
+      "default_field": "description",
+      "query": "nosql"
+    }
+  }
+}
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "terms": {
+      "tags": ["elasticsearch", "hadoop", "lucene"]
+    }
+  },
+  "_source": ["name", "tags"]
+}
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "bool": {
+      "should": [
+        {"terms":  {"tags": ["elasticsearch", "hadoop", "lucene"]}}
+      ],
+      "minimum_should_match": 1
+    }
+  }
 }
