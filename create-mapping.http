@@ -50,7 +50,7 @@ content-type: application/json
   },
   "mappings": {
     "properties" : {
-      "organizer" : { "type" : "keyword" },
+      "organizer" : { "type" : "text" },
       "name" : { "type" : "text" },
       "description" : {
         "type" : "text",
@@ -64,7 +64,7 @@ content-type: application/json
         "type" : "text",
         "fields": {
           "verbatim" : {
-            "type" : "text"
+            "type" : "keyword"
           }
         }
       },

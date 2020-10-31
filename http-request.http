@@ -184,3 +184,160 @@ Content-Type: application/json
     }
   }
 }
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "match": {
+      "name": {
+        "query": "Elasticsearch Denver",
+        "operator": "and"
+      }
+    }
+  }
+}
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "match_phrase": {
+      "name": {
+        "query": "enterprise london",
+        "slop": 1
+      }
+    }
+  }
+}
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "match_phrase_prefix": {
+      "name": {
+        "query": "elasticsearch den",
+        "max_expansions": 1
+      }
+    }
+  }
+}
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "multi_match": {
+      "query": "elasticsearch es",
+      "fields": ["name", "description"]
+    }
+  },
+  "_source": ["name", "description"]
+}
+
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "bool": {
+      "must": {
+        "term": {
+          "event.attendees": "david"
+        }
+      },
+      "should": [
+        {
+          "term": {
+            "event.attendees": "clint"
+          }
+        },
+        {
+          "term": {
+            "event.attendees": "andy"
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "range": {
+            "event.date": {
+              "lt": "2013-06-30T00:00"
+            }
+          }
+        }
+      ],
+      "minimum_should_match": 1
+    }
+  }
+}
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "range": {
+      "name": {
+        "gt": "c",
+        "lt": "e"
+      }
+    }
+  },
+  "_source": ["name","event"]
+}
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "bool": {
+      "filter": {
+        "term": {
+          "organizer": "Daniel"
+        }
+      }
+    }
+  }
+}
+
+###
+POST {{host}}:{{port}}/get-together/_analyze
+Content-Type: application/json
+
+{
+  "analyzer": "standard",
+  "text": "This is a test."
+}
+
+###
+POST {{host}}:{{port}}/get-together/_analyze
+Content-Type: application/json
+
+{
+  "analyzer": "myCustomAnalyzer",
+  "text": "Share your experience with NoSQL & BigData technologies"
+}
+
+###
+POST {{host}}:{{port}}/get-together/_termvectors/1
+Content-Type: application/json
+
+{
+  "fields": ["description", "tags"],
+  "term_statistics": true
+}
