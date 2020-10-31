@@ -341,3 +341,82 @@ Content-Type: application/json
   "fields": ["description", "tags"],
   "term_statistics": true
 }
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "match": {
+            "description": {
+              "query": "elasticsearch big data",
+              "boost": 2.5
+            }
+          }
+        },
+        {
+          "match": {
+            "name": {
+              "query": "elasticsearch big data"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "_source": ["name", "description"],
+  "explain": true
+}
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "match": {
+      "name": "elasticsearch"
+    }
+  },
+  "rescore": {
+    "window_size": 20,
+    "query": {
+      "rescore_query": {
+        "match": {
+          "name": {
+            "query": "elasticsearch"
+          }
+        }
+      },
+      "query_weight": 0.8,
+      "rescore_query_weight": 1.3
+    }
+  }
+}
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "function_score": {
+      "query": {
+        "match": {
+          "description": "elasticsearch"
+        }
+      },
+      "functions": [
+        {
+          "weight": 1.5,
+          "filter": {"term": {"description": "hadoop"}}
+        }
+      ]
+    }
+  }
+}
+
