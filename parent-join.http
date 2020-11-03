@@ -1,0 +1,122 @@
+###
+PUT {{host}}:{{port}}/get-together
+content-type: application/json
+
+{
+	"mappings": {
+		"properties": {
+			"group_id": {
+				"type": "keyword"
+			},
+			"group_join_field": {
+				"type": "join",
+				"relations": {
+					"group": "event"
+				}
+			}
+		}
+	}
+}
+
+###
+GET {{host}}:{{port}}/get-together/_mapping
+Content-Type: application/json
+
+###
+GET {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+	"query": {
+		"match_all": {}
+	}
+}
+
+###
+PUT {{host}}:{{port}}/get-together/_doc/1?refresh
+Content-Type: application/json
+
+{
+	"group_id": "1",
+	"text": "Tigers",
+	"group_join_field": {
+		"name": "group"
+	}
+}
+
+###
+PUT {{host}}:{{port}}/get-together/_doc/2?refresh
+Content-Type: application/json
+
+{
+	"group_id": "2",
+	"text": "Marines",
+	"group_join_field": "group"
+}
+
+###
+PUT {{host}}:{{port}}/get-together/_doc/3?routing=1refresh
+Content-Type: application/json
+
+{
+	"event_id": "1",
+	"text": "Oyama",
+	"group_join_field": {
+		"name": "event",
+		"parent": "1"
+	}
+}
+
+###
+GET {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "has_child": {
+      "type": "event",
+      "query": {
+        "match_all": {}
+      },
+      "max_children": 10,
+      "inner_hits": {}
+    }
+  }
+}
+
+###
+POST {{host}}:{{port}}/get-together/_doc/1
+Content-Type: application/json
+
+{
+  "group_id": "1",
+	"name": "Denver Clojure",
+	"organizer": ["Daniel", "Lee"],
+	"description": "Group of Clojure enthusiasts from Denver who want to hack on code together and learn more about Clojure",
+	"created_on": "2012-06-15",
+	"tags": ["clojure", "denver", "functional programming", "jvm", "java"],
+	"members": ["Lee", "Daniel", "Mike"],
+	"location_group": "Denver, Colorado, USA",
+	"group_join_field": "group"
+}
+
+###
+PUT {{host}}:{{port}}/get-together/_doc/2?routing=1
+Content-Type: application/json
+
+{
+	"host": ["Lee", "Troy"],
+	"title": "Liberator and Immutant",
+	"description": "We will discuss two different frameworks in Clojure for doing different things. Liberator is a ring-compatible web framework based on Erlang Webmachine. Immutant is an all-in-one enterprise application based on JBoss.",
+	"attendees": ["Lee", "Troy", "Daniel", "Tom"],
+	"date": "2013-09-05T18:00",
+	"location_event": {
+		"name": "Stoneys Full Steam Tavern",
+		"geolocation": "39.752337,-105.00083"
+	},
+	"reviews": 4,
+	"group_join_field": {
+		"name": "event",
+		"parent": "1"
+	}
+}
