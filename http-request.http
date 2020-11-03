@@ -420,3 +420,68 @@ Content-Type: application/json
   }
 }
 
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "aggregations": {
+    "tags": {
+      "terms": {
+        "field": "tags.verbatim",
+        "order": {
+          "_term": "asc"
+        }
+      }
+    }
+  }
+}
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "aggregations": {
+    "tags": {
+      "terms": {
+        "field": "tags.verbatim",
+        "include": ".*search*."
+      }
+    }
+  }
+}
+
+###
+POST {{host}}:{{port}}/get-together/_search
+Content-Type: application/json
+
+{
+  "aggregations": {
+    "top_tags": {
+      "terms": {
+        "field": "tags.verbatim"
+      },
+      "aggregations": {
+        "groups_per_month": {
+          "date_histogram": {
+            "field": "created_on",
+            "interval": "1M"
+          },
+          "aggregations": {
+            "number_of_members": {
+              "range": {
+                "script": "doc[members].values.length",
+                "ranges": [
+                  {"to": 3},
+                  {"from": 3}
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
